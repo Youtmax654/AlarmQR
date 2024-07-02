@@ -1,12 +1,16 @@
+// import * as NavigationBar from "expo-navigation-bar";
 import { StatusBar } from "expo-status-bar";
-import { Text, View } from "react-native";
+import { View } from "react-native";
+import { Alarms } from "./components/Alarms";
+import { Clock } from "./components/Clock";
 
 export default function App() {
+  // NavigationBar.setBackgroundColorAsync("#f9f9f9");
+
   return (
-    <View className="flex-1 items-center justify-center bg-white">
-      <Text className="font-bold">
-        Open up App.tsx to start working on your app!!!!
-      </Text>
+    <View className="items-center bg-light">
+      <Clock />
+      <Alarms />
       <StatusBar style="auto" />
     </View>
   );

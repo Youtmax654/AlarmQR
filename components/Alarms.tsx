@@ -1,22 +1,28 @@
 import { Entypo } from "@expo/vector-icons";
-import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
+import { addAlarm, Alarm } from "../utils/Alarm";
 
-const dummyAlarms: Alarm[] = [
-  { id: 1, time: "12:00", active: true },
-  { id: 2, time: "12:00", active: true },
-  { id: 3, time: "12:00", active: true },
-];
+type Props = {
+  alarms: Alarm[] | undefined;
+  setAlarms: (alarms: Alarm[]) => void;
+};
 
-type Props = {};
-export const Alarms = ({}: Props) => {
-  const [alarmsList, setAlarmsList] = useState<Alarm[]>(dummyAlarms);
+export const Alarms = ({ alarms, setAlarms }: Props) => {
+  const handleAlarmToggle = (id: string) => {
+    if (!alarms) return;
 
-  const handleAlarmToggle = (id: number) => {
-    setAlarmsList((prev) =>
-      prev.map((alarm) =>
-        alarm.id === id ? { ...alarm, active: !alarm.active } : alarm
-      )
+    const newAlarms = alarms.map((alarm) =>
+      alarm.id === id ? { ...alarm, active: !alarm.active } : alarm
+    );
+    setAlarms(newAlarms);
+  };
+
+  const handleNewAlarm = () => {
+    const dummyHour = Math.floor(Math.random() * 24);
+    const dummyMinute = Math.floor(Math.random() * 60);
+
+    addAlarm(dummyHour, dummyMinute, alarms ?? []).then((newAlarms) =>
+      setAlarms(newAlarms)
     );
   };
 
@@ -28,24 +34,26 @@ export const Alarms = ({}: Props) => {
           <Entypo name="dots-three-horizontal" size={24} color="black" />
         </View>
 
-        {alarmsList.map((alarm) => (
+        {alarms?.map((alarm) => (
           <View
             key={alarm.id}
             className="w-80 h-[75px] bg-slate-400 flex-row items-center justify-between px-4 rounded-[20px]"
           >
-            <Text className="text-3xl font-medium">{alarm.time}</Text>
+            <Text className="text-3xl font-medium">
+              {alarm.hour + ":" + alarm.minute}
+            </Text>
             <Slider alarm={alarm} handler={handleAlarmToggle} />
           </View>
         ))}
       </View>
-      <NewAlarm />
+      <NewAlarm handler={handleNewAlarm} />
     </View>
   );
 };
 
 type SliderProps = {
   alarm: Alarm;
-  handler: (id: number) => void;
+  handler: (id: string) => void;
 };
 const Slider = ({ alarm, handler }: SliderProps) => {
   return (
@@ -64,18 +72,18 @@ const Slider = ({ alarm, handler }: SliderProps) => {
   );
 };
 
-const NewAlarm = () => {
+type NewAlarmProps = {
+  handler: () => void;
+};
+const NewAlarm = ({ handler }: NewAlarmProps) => {
   return (
     <View className="mt-8">
-      <Pressable className="w-16 h-16 rounded-full bg-primary items-center justify-center">
+      <Pressable
+        className="w-16 h-16 rounded-full bg-primary items-center justify-center"
+        onPress={handler}
+      >
         <Text className="text-white font-bold text-4xl">+</Text>
       </Pressable>
     </View>
   );
-};
-
-export type Alarm = {
-  id: number;
-  time: string;
-  active: boolean;
 };

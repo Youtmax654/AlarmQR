@@ -17,7 +17,8 @@
     "nativewind": "^2.0.11",
     "react": "18.2.0",
     "react-native": "0.74.2",
-    "react-native-uuid": "^2.0.2"
+    "react-native-uuid": "^2.0.2",
+    "zustand": "^4.5.4"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import uuid from "react-native-uuid";
+import { create } from "zustand";
 
 export type Alarm = {
   id: string;
@@ -8,14 +9,28 @@ export type Alarm = {
   active: boolean;
 };
 
-export async function addAlarm(
-  hour: number,
-  minute: number,
-  alarms: Alarm[]
-): Promise<Alarm[]> {
+interface AlarmStore {
+  alarms: Alarm[];
+  setAlarms: (alarms: Alarm[]) => void;
+}
+
+export const useAlarmStore = create<AlarmStore>((set) => ({
+  alarms: [],
+  setAlarms: (alarms: Alarm[]) => set({ alarms }),
+}));
+
+export async function getAlarms() {
+  try {
+    const alarms = await AsyncStorage.getItem("alarms");
+    useAlarmStore.setState({ alarms: alarms ? JSON.parse(alarms) : [] });
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+export async function addAlarm(hour: number, minute: number, alarms: Alarm[]) {
   if (hour < 0 || hour > 23 || minute < 0 || minute > 59) {
     console.error("Invalid time");
-    return alarms;
   }
 
   const id = uuid.v4().toString();
@@ -23,20 +38,9 @@ export async function addAlarm(
 
   try {
     await AsyncStorage.setItem("alarms", JSON.stringify([...alarms, newAlarm]));
-    return [...alarms, newAlarm];
+    useAlarmStore.setState({ alarms: [...alarms, newAlarm] });
   } catch (e) {
     console.error(e);
-    return alarms;
-  }
-}
-
-export async function getAlarms(): Promise<Alarm[]> {
-  try {
-    const alarms = await AsyncStorage.getItem("alarms");
-    return alarms ? JSON.parse(alarms) : [];
-  } catch (e) {
-    console.error(e);
-    return [];
   }
 }
 

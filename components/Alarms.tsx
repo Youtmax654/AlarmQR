@@ -1,13 +1,12 @@
 import { Entypo } from "@expo/vector-icons";
 import { Pressable, Text, View } from "react-native";
-import { addAlarm, Alarm } from "../utils/Alarm";
+import { Alarm, useAlarmStore } from "../hooks/useAlarmStore";
 
-type Props = {
-  alarms: Alarm[] | undefined;
-  setAlarms: (alarms: Alarm[]) => void;
-};
+type Props = {};
 
-export const Alarms = ({ alarms, setAlarms }: Props) => {
+export const Alarms = ({}: Props) => {
+  const { alarms, setAlarms } = useAlarmStore();
+
   const handleAlarmToggle = (id: string) => {
     if (!alarms) return;
 
@@ -15,15 +14,6 @@ export const Alarms = ({ alarms, setAlarms }: Props) => {
       alarm.id === id ? { ...alarm, active: !alarm.active } : alarm
     );
     setAlarms(newAlarms);
-  };
-
-  const handleNewAlarm = () => {
-    const dummyHour = Math.floor(Math.random() * 24);
-    const dummyMinute = Math.floor(Math.random() * 60);
-
-    addAlarm(dummyHour, dummyMinute, alarms ?? []).then((newAlarms) =>
-      setAlarms(newAlarms)
-    );
   };
 
   return (
@@ -46,7 +36,6 @@ export const Alarms = ({ alarms, setAlarms }: Props) => {
           </View>
         ))}
       </View>
-      <NewAlarm handler={handleNewAlarm} />
     </View>
   );
 };
@@ -69,21 +58,5 @@ const Slider = ({ alarm, handler }: SliderProps) => {
         }`}
       ></View>
     </Pressable>
-  );
-};
-
-type NewAlarmProps = {
-  handler: () => void;
-};
-const NewAlarm = ({ handler }: NewAlarmProps) => {
-  return (
-    <View className="mt-8">
-      <Pressable
-        className="w-16 h-16 rounded-full bg-primary items-center justify-center"
-        onPress={handler}
-      >
-        <Text className="text-white font-bold text-4xl">+</Text>
-      </Pressable>
-    </View>
   );
 };

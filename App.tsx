@@ -1,22 +1,19 @@
 // import * as NavigationBar from "expo-navigation-bar";
 import { StatusBar } from "expo-status-bar";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect } from "react";
 import { Text, View } from "react-native";
 import { Alarms } from "./components/Alarms";
 import { Clock } from "./components/Clock";
-import { Alarm, getAlarms } from "./utils/Alarm";
+import { NewAlarmBtn } from "./components/NewAlarmBtn";
+import { getAlarms } from "./hooks/useAlarmStore";
 
 export default function App() {
   // NavigationBar.setBackgroundColorAsync("#f9f9f9");
 
-  const [alarms, setAlarms] = useState<Alarm[]>();
-
   useEffect(() => {
     const fetchData = async () => {
-      const alarms = await getAlarms();
-      setAlarms(alarms);
+      await getAlarms();
     };
-
     fetchData();
   }, []);
 
@@ -30,7 +27,8 @@ export default function App() {
     >
       <View className="items-center bg-light">
         <Clock />
-        <Alarms alarms={alarms} setAlarms={setAlarms} />
+        <Alarms />
+        <NewAlarmBtn />
         <StatusBar style="auto" />
       </View>
     </Suspense>

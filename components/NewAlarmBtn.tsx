@@ -13,7 +13,7 @@ export const NewAlarmBtn = ({}: Props) => {
   };
 
   return (
-    <View className="mt-8">
+    <View className="m-8 absolute bottom-8">
       <Pressable
         className="w-16 h-16 rounded-full bg-primary items-center justify-center"
         onPress={handleNewAlarm}

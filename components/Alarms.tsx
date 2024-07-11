@@ -1,5 +1,5 @@
 import { Entypo } from "@expo/vector-icons";
-import { Pressable, Text, View } from "react-native";
+import { Pressable, ScrollView, Text, View } from "react-native";
 import { Alarm, useAlarmStore } from "../hooks/useAlarmStore";
 
 type Props = {};
@@ -17,13 +17,16 @@ export const Alarms = ({}: Props) => {
   };
 
   return (
-    <View className="w-full h-full items-center bg-slate-500">
-      <View className="p-5 gap-6 items-center">
-        <View className="flex-row justify-between items-center w-full px-10">
-          <Text className="text-lg font-medium">Alarms</Text>
-          <Entypo name="dots-three-horizontal" size={24} color="black" />
-        </View>
+    <View className="w-full items-center bg-slate-500 flex-1">
+      <View className="flex-row justify-between items-center w-full px-12 py-6">
+        <Text className="text-lg font-medium">Alarms</Text>
+        <Entypo name="dots-three-horizontal" size={24} color="black" />
+      </View>
 
+      <ScrollView
+        className="bg-slate-500 w-full"
+        contentContainerStyle={{ alignItems: "center", gap: 30 }}
+      >
         {alarms?.map((alarm) => (
           <View
             key={alarm.id}
@@ -35,7 +38,7 @@ export const Alarms = ({}: Props) => {
             <Slider alarm={alarm} handler={handleAlarmToggle} />
           </View>
         ))}
-      </View>
+      </ScrollView>
     </View>
   );
 };

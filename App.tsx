@@ -25,7 +25,7 @@ export default function App() {
         </View>
       }
     >
-      <View className="items-center bg-light">
+      <View className="items-center bg-light h-full">
         <Clock />
         <Alarms />
         <NewAlarmBtn />

@@ -33,7 +33,7 @@ export const Alarms = ({}: Props) => {
             className="w-80 h-[75px] bg-slate-400 flex-row items-center justify-between px-4 rounded-[20px]"
           >
             <Text className="text-3xl font-medium">
-              {alarm.hour + ":" + alarm.minute}
+              {alarm.hour + ":" + alarm.minute.toString().padStart(2, "0")}
             </Text>
             <Slider alarm={alarm} handler={handleAlarmToggle} />
           </View>

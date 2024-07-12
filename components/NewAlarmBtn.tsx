@@ -1,3 +1,4 @@
+import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import { Pressable, Text, View } from "react-native";
 import { addAlarm, useAlarmStore } from "../hooks/useAlarmStore";
 
@@ -6,10 +7,18 @@ export const NewAlarmBtn = ({}: Props) => {
   const { alarms } = useAlarmStore();
 
   const handleNewAlarm = () => {
-    const dummyHour = Math.floor(Math.random() * 24);
-    const dummyMinute = Math.floor(Math.random() * 60);
-
-    addAlarm(dummyHour, dummyMinute, alarms ?? []);
+    DateTimePickerAndroid.open({
+      value: new Date(),
+      display: "default",
+      onChange: (e, date) => {
+        if (date && e.type === "set") {
+          const hour = date.getHours();
+          const minute = date.getMinutes();
+          addAlarm(hour, minute, alarms ?? []);
+        }
+      },
+      mode: "time",
+    });
   };
 
   return (

@@ -25,7 +25,12 @@ export const useAlarmStore = create<AlarmStore>((set) => ({
 export async function getAlarms() {
   try {
     const alarms = await AsyncStorage.getItem("alarms");
-    useAlarmStore.setState({ alarms: alarms ? JSON.parse(alarms) : [] });
+    const parsedAlarms: Alarm[] = alarms ? JSON.parse(alarms) : [];
+    const sortedAlarms = parsedAlarms.sort((a, b) => {
+      return a.hour * 60 + a.minute - (b.hour * 60 + b.minute);
+    });
+
+    useAlarmStore.setState({ alarms: alarms ? sortedAlarms : [] });
   } catch (e) {
     console.error(e);
   }
@@ -42,6 +47,16 @@ export async function addAlarm(hour: number, minute: number, alarms: Alarm[]) {
   try {
     await AsyncStorage.setItem("alarms", JSON.stringify([...alarms, newAlarm]));
     useAlarmStore.setState({ alarms: [...alarms, newAlarm] });
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+export async function removeAlarm(id: string, alarms: Alarm[]) {
+  try {
+    const newAlarms = alarms.filter((alarm) => alarm.id !== id);
+    await AsyncStorage.setItem("alarms", JSON.stringify(newAlarms));
+    useAlarmStore.setState({ alarms: newAlarms });
   } catch (e) {
     console.error(e);
   }

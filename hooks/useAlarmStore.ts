@@ -16,7 +16,10 @@ interface AlarmStore {
 
 export const useAlarmStore = create<AlarmStore>((set) => ({
   alarms: [],
-  setAlarms: (alarms: Alarm[]) => set({ alarms }),
+  setAlarms: (alarms: Alarm[]) => {
+    set({ alarms });
+    AsyncStorage.setItem("alarms", JSON.stringify(alarms));
+  },
 }));
 
 export async function getAlarms() {

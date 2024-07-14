@@ -24,26 +24,30 @@ export const Alarms = ({}: Props) => {
       </View>
 
       <ScrollView
-        className="bg-slate-500 w-full"
+        className="bg-slate-500 w-full h-full"
         contentContainerStyle={{
           alignItems: "center",
           gap: 30,
           paddingBottom: 30,
         }}
       >
-        {alarms?.map((alarm) => (
-          <View
-            key={alarm.id}
-            className="w-[88%] h-[75px] bg-slate-400 flex-row items-center justify-between px-4 rounded-[20px]"
-          >
-            <Text className="text-3xl font-medium">
-              {alarm.hour.toString().padStart(2, "0") +
-                ":" +
-                alarm.minute.toString().padStart(2, "0")}
-            </Text>
-            <Slider alarm={alarm} handler={handleAlarmToggle} />
-          </View>
-        ))}
+        {alarms.length > 0 ? (
+          alarms.map((alarm) => (
+            <View
+              key={alarm.id}
+              className="w-[88%] h-[75px] bg-slate-400 flex-row items-center justify-between px-4 rounded-[20px]"
+            >
+              <Text className="text-3xl font-medium">
+                {alarm.hour.toString().padStart(2, "0") +
+                  ":" +
+                  alarm.minute.toString().padStart(2, "0")}
+              </Text>
+              <Slider alarm={alarm} handler={handleAlarmToggle} />
+            </View>
+          ))
+        ) : (
+          <Text className="text-lg font-medium">No alarms here</Text>
+        )}
       </ScrollView>
     </View>
   );

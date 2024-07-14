@@ -1,9 +1,9 @@
 import { Entypo } from "@expo/vector-icons";
+import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { Alarm, useAlarmStore } from "../hooks/useAlarmStore";
 
 type Props = {};
-
 export const Alarms = ({}: Props) => {
   const { alarms, setAlarms } = useAlarmStore();
 
@@ -14,6 +14,30 @@ export const Alarms = ({}: Props) => {
       alarm.id === id ? { ...alarm, active: !alarm.active } : alarm
     );
     setAlarms(newAlarms);
+  };
+
+  const handleAlarmClick = (id: string) => {
+    DateTimePickerAndroid.open({
+      value: new Date(),
+      display: "default",
+      mode: "time",
+      positiveButton: { label: "Set" },
+      neutralButton: { label: "Delete", textColor: "red" },
+      negativeButton: { label: "Cancel" },
+      onChange: (e, date) => {
+        if (date && e.type === "set") {
+          const hour = date.getHours();
+          const minute = date.getMinutes();
+          const newAlarms = alarms.filter((alarm) => alarm.id !== id);
+          setAlarms([...newAlarms, { id, hour, minute, active: true }]);
+        } else if (e.type === "neutralButtonPressed") {
+          const newAlarms = alarms.filter((alarm) => alarm.id !== id);
+          setAlarms(newAlarms);
+        } else if (e.type === "dismissed") {
+          return;
+        }
+      },
+    });
   };
 
   return (
@@ -33,8 +57,9 @@ export const Alarms = ({}: Props) => {
       >
         {alarms.length > 0 ? (
           alarms.map((alarm) => (
-            <View
+            <Pressable
               key={alarm.id}
+              onPress={() => handleAlarmClick(alarm.id)}
               className="w-[88%] h-[75px] bg-slate-400 flex-row items-center justify-between px-4 rounded-[20px]"
             >
               <Text className="text-3xl font-medium">
@@ -43,7 +68,7 @@ export const Alarms = ({}: Props) => {
                   alarm.minute.toString().padStart(2, "0")}
               </Text>
               <Slider alarm={alarm} handler={handleAlarmToggle} />
-            </View>
+            </Pressable>
           ))
         ) : (
           <Text className="text-lg font-medium">No alarms here</Text>

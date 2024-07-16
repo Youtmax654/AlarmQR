@@ -21,7 +21,8 @@
     "zustand": "^4.5.4",
     "@react-native-community/datetimepicker": "8.0.1",
     "react-native-gesture-handler": "~2.16.1",
-    "expo-dev-client": "~4.0.20"
+    "expo-dev-client": "~4.0.20",
+    "expo-notifications": "~0.28.10"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

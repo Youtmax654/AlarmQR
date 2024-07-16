@@ -6,15 +6,18 @@ import { Alarms } from "./components/Alarms";
 import { Clock } from "./components/Clock";
 import { NewAlarmBtn } from "./components/NewAlarmBtn";
 import { getAlarms } from "./hooks/useAlarmStore";
+import { initNotifications } from "./utils/Notifications";
 
 export default function App() {
   // NavigationBar.setBackgroundColorAsync("#f9f9f9");
 
+  const initApp = async () => {
+    await getAlarms();
+    await initNotifications();
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      await getAlarms();
-    };
-    fetchData();
+    initApp();
   }, []);
 
   return (

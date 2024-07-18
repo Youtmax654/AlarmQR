@@ -12,14 +12,16 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "UIBackgroundModes": ["audio"]
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.youtmax.alarmqr"
+      "package": "com.youtmax.alarmqr",
+      "permissions": ["WAKE_LOCK", "CAMERA", "VIBRATE"]
     },
     "web": {
       "favicon": "./assets/favicon.png"

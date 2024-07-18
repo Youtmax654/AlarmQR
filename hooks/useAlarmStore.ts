@@ -1,18 +1,15 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as Notifications from "expo-notifications";
 import uuid from "react-native-uuid";
 import { create } from "zustand";
-
-export type Alarm = {
-  id: string;
-  hour: number;
-  minute: number;
-  active: boolean;
-};
+import { Alarm } from "../utils/alarm";
+import { scheduleAlarmNotification } from "../utils/notifications";
 
 interface AlarmStore {
   alarms: Alarm[];
   setAlarms: (alarms: Alarm[]) => void;
+  getAlarms: () => Promise<void>;
+  addAlarm: (hour: number, minute: number, alarms: Alarm[]) => Promise<void>;
+  removeAlarm: (id: string, alarms: Alarm[]) => Promise<void>;
 }
 
 export const useAlarmStore = create<AlarmStore>((set) => ({
@@ -21,9 +18,13 @@ export const useAlarmStore = create<AlarmStore>((set) => ({
     set({ alarms });
     AsyncStorage.setItem("alarms", JSON.stringify(alarms));
   },
+  getAlarms: () => getAlarms(),
+  addAlarm: (hour: number, minute: number, alarms: Alarm[]) =>
+    addAlarm(hour, minute, alarms),
+  removeAlarm: (id: string, alarms: Alarm[]) => removeAlarm(id, alarms),
 }));
 
-export async function getAlarms() {
+async function getAlarms() {
   try {
     const alarms = await AsyncStorage.getItem("alarms");
     const parsedAlarms: Alarm[] = alarms ? JSON.parse(alarms) : [];
@@ -37,7 +38,7 @@ export async function getAlarms() {
   }
 }
 
-export async function addAlarm(hour: number, minute: number, alarms: Alarm[]) {
+async function addAlarm(hour: number, minute: number, alarms: Alarm[]) {
   if (hour < 0 || hour > 23 || minute < 0 || minute > 59) {
     console.error("Invalid time");
   }
@@ -45,13 +46,7 @@ export async function addAlarm(hour: number, minute: number, alarms: Alarm[]) {
   const id = uuid.v4().toString();
   const newAlarm = { id, hour, minute, active: true };
 
-  await Notifications.scheduleNotificationAsync({
-    content: {
-      title: "Alarm",
-      body: "Wake up!",
-    },
-    trigger: null,
-  });
+  scheduleAlarmNotification(hour, minute);
 
   try {
     await AsyncStorage.setItem("alarms", JSON.stringify([...alarms, newAlarm]));
@@ -61,7 +56,7 @@ export async function addAlarm(hour: number, minute: number, alarms: Alarm[]) {
   }
 }
 
-export async function removeAlarm(id: string, alarms: Alarm[]) {
+async function removeAlarm(id: string, alarms: Alarm[]) {
   try {
     const newAlarms = alarms.filter((alarm) => alarm.id !== id);
     await AsyncStorage.setItem("alarms", JSON.stringify(newAlarms));
@@ -70,26 +65,3 @@ export async function removeAlarm(id: string, alarms: Alarm[]) {
     console.error(e);
   }
 }
-
-// export function setAlarm(hour: number, minute: number, enabled: boolean) {
-//   const alarm = new Date();
-//   alarm.setHours(hour);
-//   alarm.setMinutes(minute);
-//   alarm.setSeconds(0);
-
-//   if (enabled) {
-//     if (alarm.getTime() < Date.now()) {
-//       alarm.setDate(alarm.getDate() + 1);
-//     }
-
-//     const alarmId = Notifications.scheduleNotificationAsync({
-//       content: {
-//         title: "Alarm",
-//         body: "Wake up!",
-//       },
-//       trigger: alarm,
-//     });
-
-//     return alarmId;
-//   }
-// }

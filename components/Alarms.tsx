@@ -1,7 +1,8 @@
 import { Entypo } from "@expo/vector-icons";
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import { Pressable, ScrollView, Text, View } from "react-native";
-import { Alarm, useAlarmStore } from "../hooks/useAlarmStore";
+import { useAlarmStore } from "../hooks/useAlarmStore";
+import { Alarm } from "../utils/alarm";
 
 type Props = {};
 export const Alarms = ({}: Props) => {

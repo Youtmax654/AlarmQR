@@ -5,11 +5,12 @@ import { Text, View } from "react-native";
 import { Alarms } from "./components/Alarms";
 import { Clock } from "./components/Clock";
 import { NewAlarmBtn } from "./components/NewAlarmBtn";
-import { getAlarms } from "./hooks/useAlarmStore";
-import { initNotifications } from "./utils/Notifications";
+import { useAlarmStore } from "./hooks/useAlarmStore";
+import { initNotifications } from "./utils/notifications";
 
 export default function App() {
   // NavigationBar.setBackgroundColorAsync("#f9f9f9");
+  const { getAlarms } = useAlarmStore();
 
   const initApp = async () => {
     await getAlarms();

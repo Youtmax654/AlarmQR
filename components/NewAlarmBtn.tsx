@@ -1,10 +1,10 @@
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import { Pressable, Text, View } from "react-native";
-import { addAlarm, useAlarmStore } from "../hooks/useAlarmStore";
+import { useAlarmStore } from "../hooks/useAlarmStore";
 
 type Props = {};
 export const NewAlarmBtn = ({}: Props) => {
-  const { alarms } = useAlarmStore();
+  const { alarms, addAlarm } = useAlarmStore();
 
   const handleNewAlarm = async () => {
     DateTimePickerAndroid.open({

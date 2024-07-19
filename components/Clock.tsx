@@ -89,16 +89,17 @@ const Markings = ({ x, y }: MarkingsProps) => {
 
 const Hands = ({ x, y }: { x: number; y: number }) => {
   const hourPath = Skia.Path.Make();
-  hourPath.moveTo(x, y);
-  hourPath.lineTo(x, y - 45);
+  hourPath.moveTo(x, y + 18);
+  hourPath.lineTo(x, y - 42);
 
   const minutePath = Skia.Path.Make();
-  minutePath.moveTo(x, y);
-  minutePath.lineTo(x, y - 58);
+  minutePath.moveTo(x, y + 20);
+  minutePath.lineTo(x, y - 55);
 
   const secondPath = Skia.Path.Make();
-  secondPath.moveTo(x, y);
+  secondPath.moveTo(x, y + 26);
   secondPath.lineTo(x, y - 65);
+  secondPath.addRRect({ rect: rect(x - 1.5, y + 10, 3, 16), rx: 1.5, ry: 1.5 });
 
   const date = new Date();
 
@@ -141,9 +142,13 @@ const Hands = ({ x, y }: { x: number; y: number }) => {
           path={hourPath}
           color="#646E82"
           style="stroke"
-          strokeWidth={3.5}
+          strokeWidth={3}
           strokeCap={"round"}
         />
+        <Group>
+          <Circle cx={x} cy={y} r={5} color="#646E82" />
+          <Shadow dx={1} dy={1} blur={2} color="rgba(73, 84, 107, 0.57)" />
+        </Group>
       </Group>
       <Group transform={[{ rotate: minuteRotation.value }]} origin={{ x, y }}>
         <Path
@@ -162,9 +167,11 @@ const Hands = ({ x, y }: { x: number; y: number }) => {
           strokeWidth={2}
           strokeCap={"round"}
         />
-        <Shadow dx={1} dy={3} blur={4} color="rgba(251, 8, 0, 0.35)" />
       </Group>
-      <Circle cx={x} cy={y} r={3} color="#FF0000" />
+      <Group>
+        <Circle cx={x} cy={y} r={3} color="#FD4538" />
+        <Shadow dx={1} dy={1} blur={2} color="#49546B" />
+      </Group>
     </Group>
   );
 };

@@ -116,8 +116,8 @@ const Hands = ({ x, y }: { x: number; y: number }) => {
       const now = new Date();
       setHours((now.getHours() % 12) + now.getMinutes() / 60);
       setMinutes(now.getMinutes() + now.getSeconds() / 60);
-      setSeconds(now.getSeconds() + now.getMilliseconds() / 1000);
-    }, 1000 / 60);
+      setSeconds(now.getSeconds());
+    }, 1000);
 
     return () => clearInterval(interval);
   }, [hours, minutes, seconds]);
@@ -131,7 +131,7 @@ const Hands = ({ x, y }: { x: number; y: number }) => {
     [minutes]
   );
   const secondRotation = useDerivedValue(
-    () => ((2 * Math.PI) / 60) * seconds,
+    () => ((2 * Math.PI) / 60) * (seconds + 2), // +2 to make the second hand ahead of the actual time
     [seconds]
   );
 

@@ -5,6 +5,7 @@ module.exports = {
     extend: {
       colors: {
         "light": "#EEF0F5",
+        "alarms-light": "#EAECF1",
         "primary": "#FD2A23",
       },
       dropShadow: {

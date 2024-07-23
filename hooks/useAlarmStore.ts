@@ -50,7 +50,12 @@ async function addAlarm(hour: number, minute: number, alarms: Alarm[]) {
 
   try {
     await AsyncStorage.setItem("alarms", JSON.stringify([...alarms, newAlarm]));
-    useAlarmStore.setState({ alarms: [...alarms, newAlarm] });
+    const newAlarms = alarms ? [...alarms, newAlarm] : [newAlarm];
+    const sortedAlarms = newAlarms.sort((a, b) => {
+      return a.hour * 60 + a.minute - (b.hour * 60 + b.minute);
+    });
+
+    useAlarmStore.setState({ alarms: sortedAlarms });
   } catch (e) {
     console.error(e);
   }

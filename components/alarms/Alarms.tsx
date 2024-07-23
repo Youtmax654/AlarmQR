@@ -16,35 +16,39 @@ import {
   ScrollView,
   View,
 } from "react-native";
-import { useAlarmStore } from "../hooks/useAlarmStore";
-import { Alarm } from "../utils/alarm";
+import { useAlarmStore } from "../../hooks/useAlarmStore";
+import Slider from "./Slider";
 
 type Props = {};
 export const Alarms = ({}: Props) => {
-  return (
-    <View className="w-full items-center bg-alarms-light flex-1 rounded-[20px]">
-      <AlarmTopTitle />
-      <AlarmList />
-    </View>
-  );
-};
-
-const AlarmTopTitle = () => {
   const [canvasDimensions, setCanvasDimensions] = useState({
     width: 0,
     height: 0,
   });
   const { width } = canvasDimensions;
 
-  const font = useFont(
-    require("../assets/fonts/poppins/Poppins-Medium.ttf"),
-    18
-  );
-
   const handleLayout = (event: LayoutChangeEvent) => {
     const { width, height } = event.nativeEvent.layout;
     setCanvasDimensions({ width, height });
   };
+
+  return (
+    <View className="w-full items-center bg-alarms-light flex-1 rounded-[20px]">
+      <AlarmTopTitle handleLayout={handleLayout} width={width} />
+      <AlarmList width={width} />
+    </View>
+  );
+};
+
+type AlarmTopTitleProps = {
+  handleLayout: (event: LayoutChangeEvent) => void;
+  width: number;
+};
+const AlarmTopTitle = ({ handleLayout, width }: AlarmTopTitleProps) => {
+  const font = useFont(
+    require("../../assets/fonts/poppins/Poppins-Medium.ttf"),
+    18
+  );
 
   return (
     <>
@@ -63,7 +67,7 @@ const AlarmTopTitle = () => {
         </Group>
       </Canvas>
       <Pressable
-        className="absolute right-10 top-9"
+        className="absolute right-10 top-8"
         onPress={() => {
           alert("Options button");
         }}
@@ -74,8 +78,13 @@ const AlarmTopTitle = () => {
   );
 };
 
-const AlarmList = () => {
+type AlarmListProps = {
+  width: number;
+};
+const AlarmList = ({ width }: AlarmListProps) => {
   const { alarms, setAlarms } = useAlarmStore();
+  const alarmWidth = width * 0.88;
+  const alarmPosX = width / 2 - alarmWidth / 2;
 
   const handleAlarmToggle = (id: string) => {
     if (!alarms) return;
@@ -110,49 +119,74 @@ const AlarmList = () => {
     });
   };
 
-  const Slider = ({ alarm }: { alarm: Alarm }) => {
-    return (
-      <Pressable
-        className={`relative w-12 h-6 rounded-full flex justify-center ${
-          alarm.active ? "bg-primary" : "bg-slate-500"
-        }`}
-        onPress={() => handleAlarmToggle(alarm.id)}
-      >
-        <View
-          className={`w-7 h-7 absolute bg-slate-300 rounded-full ${
-            alarm.active ? "right-0" : "left-0"
-          }`}
-        ></View>
-      </Pressable>
-    );
-  };
+  const hourFont = useFont(
+    require("../../assets/fonts/poppins/Poppins-Medium.ttf"),
+    34
+  );
 
   return (
     <ScrollView
-      className="w-full h-full"
+      className="w-full flex-1"
       contentContainerStyle={{
         alignItems: "center",
-        gap: 30,
         paddingBottom: 30,
       }}
     >
       {alarms.length > 0 ? (
         alarms.map((alarm) => (
-          <Pressable
-            key={alarm.id}
-            onPress={() => handleAlarmClick(alarm.id)}
-            className="w-[88%] h-[75px] bg-slate-400 flex-row items-center justify-between px-4 rounded-[20px]"
-          >
-            <RNText className="text-3xl font-medium">
-              {alarm.hour.toString().padStart(2, "0") +
-                ":" +
-                alarm.minute.toString().padStart(2, "0")}
-            </RNText>
-            <Slider alarm={alarm} />
+          <Pressable key={alarm.id} onPress={() => handleAlarmClick(alarm.id)}>
+            <Canvas style={{ height: 105, width: alarmWidth + 50 }}>
+              <Group>
+                <RoundedRect
+                  x={alarmPosX}
+                  y={0}
+                  height={75}
+                  width={alarmWidth}
+                  r={20}
+                  color="#EAECF2"
+                />
+                <Shadow dx={1} dy={1} blur={1} color="#FFFFFF" inner />
+                <Shadow dx={-1} dy={-1} blur={1} color="#BAC3CF" inner />
+                <Shadow
+                  dx={-5}
+                  dy={-5}
+                  blur={20}
+                  color="rgba(255, 255, 255, 0.53)"
+                />
+                <Shadow
+                  dx={8}
+                  dy={12}
+                  blur={8}
+                  color="rgba(166, 180, 200, 0.57)"
+                />
+              </Group>
+              <Group>
+                <Text
+                  x={alarmPosX + 20}
+                  y={47.5}
+                  text={
+                    alarm.hour.toString().padStart(2, "0") +
+                    ":" +
+                    alarm.minute.toString().padStart(2, "0")
+                  }
+                  font={hourFont}
+                  color="#646E82"
+                  opacity={alarm.active ? 1 : 0.42}
+                />
+              </Group>
+            </Canvas>
+            <Slider
+              top={6}
+              right={45}
+              alarm={alarm}
+              handler={handleAlarmToggle}
+            />
           </Pressable>
         ))
       ) : (
-        <RNText className="text-lg font-medium">No alarms here</RNText>
+        <RNText className="text-xl font-medium text-[#646E82]">
+          No alarms here
+        </RNText>
       )}
     </ScrollView>
   );

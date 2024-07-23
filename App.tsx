@@ -2,7 +2,7 @@
 import { StatusBar } from "expo-status-bar";
 import { Suspense, useEffect } from "react";
 import { Text, View } from "react-native";
-import { Alarms } from "./components/Alarms";
+import { Alarms } from "./components/alarms/Alarms";
 import { Clock } from "./components/Clock";
 import { NewAlarmBtn } from "./components/NewAlarmBtn";
 import { useAlarmStore } from "./hooks/useAlarmStore";

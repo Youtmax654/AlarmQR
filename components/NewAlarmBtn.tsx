@@ -41,7 +41,7 @@ export const NewAlarmBtn = ({}: Props) => {
         <Group>
           <Circle cx={100} cy={100} r={45} />
           <LinearGradient
-            colors={["#E4E8F1", "#E6E9EF"]}
+            colors={["#DBE0EA", "#E6E9EF"]}
             start={{ x: 0, y: 0 }}
             end={{ x: 150, y: 150 }}
           />

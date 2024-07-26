@@ -1,4 +1,4 @@
-rootProject.name = 'alarmqr'
+rootProject.name = 'AlarmQR'
 
 dependencyResolutionManagement {
   versionCatalogs {

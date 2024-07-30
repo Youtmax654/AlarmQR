@@ -12,7 +12,7 @@ import { Pressable } from "react-native";
 import { useAlarmStore } from "../hooks/useAlarmStore";
 
 type Props = {};
-export const NewAlarmBtn = ({}: Props) => {
+const NewAlarmBtn = ({}: Props) => {
   const { alarms, addAlarm } = useAlarmStore();
 
   const font = useFont(
@@ -79,3 +79,5 @@ export const NewAlarmBtn = ({}: Props) => {
     </Pressable>
   );
 };
+
+export default NewAlarmBtn;

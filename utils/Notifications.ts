@@ -1,7 +1,9 @@
 import * as Notifications from "expo-notifications";
+import { Status } from "./alarm";
 import { playAlarmSound } from "./sounds";
+import { vibrate } from "./vibration";
 
-export async function initNotifications() {
+export async function initNotifications(setStatus: (status: Status) => void) {
   Notifications.setNotificationHandler({
     handleNotification: async () => ({
       shouldShowAlert: true,
@@ -20,6 +22,8 @@ export async function initNotifications() {
     (notification) => {
       if (notification.request.identifier === ALARM) {
         playAlarmSound();
+        vibrate();
+        setStatus("ringing");
         console.log("Alarm notification received");
       }
     }

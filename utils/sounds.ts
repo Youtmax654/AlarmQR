@@ -1,6 +1,21 @@
-import { Audio } from "expo-av";
+import { Audio, InterruptionModeAndroid, InterruptionModeIOS } from "expo-av";
 
 const sound = new Audio.Sound();
+
+export async function initAudio() {
+  try {
+    await Audio.setAudioModeAsync({
+      staysActiveInBackground: true,
+      playsInSilentModeIOS: true,
+      interruptionModeIOS: InterruptionModeIOS.DuckOthers,
+      interruptionModeAndroid: InterruptionModeAndroid.DuckOthers,
+      shouldDuckAndroid: true,
+      playThroughEarpieceAndroid: true,
+    });
+  } catch (e) {
+    console.error("Error initializing audio", e);
+  }
+}
 
 export async function playAlarmSound() {
   try {

@@ -1,12 +1,14 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import uuid from "react-native-uuid";
 import { create } from "zustand";
-import { Alarm } from "../utils/alarm";
+import { Alarm, Status } from "../utils/alarm";
 import { scheduleAlarmNotification } from "../utils/notifications";
 
 interface AlarmStore {
   alarms: Alarm[];
+  status: Status;
   setAlarms: (alarms: Alarm[]) => void;
+  setStatus: (status: Status) => void;
   getAlarms: () => Promise<void>;
   addAlarm: (hour: number, minute: number, alarms: Alarm[]) => Promise<void>;
   removeAlarm: (id: string, alarms: Alarm[]) => Promise<void>;
@@ -14,10 +16,12 @@ interface AlarmStore {
 
 export const useAlarmStore = create<AlarmStore>((set) => ({
   alarms: [],
+  status: "none",
   setAlarms: (alarms: Alarm[]) => {
     set({ alarms });
     AsyncStorage.setItem("alarms", JSON.stringify(alarms));
   },
+  setStatus: (status: Status) => set({ status }),
   getAlarms: () => getAlarms(),
   addAlarm: (hour: number, minute: number, alarms: Alarm[]) =>
     addAlarm(hour, minute, alarms),

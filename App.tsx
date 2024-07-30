@@ -1,20 +1,20 @@
 // import * as NavigationBar from "expo-navigation-bar";
 import { StatusBar } from "expo-status-bar";
-import { Suspense, useEffect } from "react";
-import { Text, View } from "react-native";
-import { Alarms } from "./components/alarms/Alarms";
-import { Clock } from "./components/Clock";
-import { NewAlarmBtn } from "./components/NewAlarmBtn";
+import { useEffect } from "react";
 import { useAlarmStore } from "./hooks/useAlarmStore";
+import HomeScreen from "./pages/HomeScreen";
+import WakeUpScreen from "./pages/WakeUpScreen";
 import { initNotifications } from "./utils/notifications";
+import { initAudio } from "./utils/sounds";
 
 export default function App() {
   // NavigationBar.setBackgroundColorAsync("#f9f9f9");
-  const { getAlarms } = useAlarmStore();
+  const { status, setStatus, getAlarms } = useAlarmStore();
 
   const initApp = async () => {
     await getAlarms();
-    await initNotifications();
+    await initNotifications(setStatus);
+    await initAudio();
   };
 
   useEffect(() => {
@@ -22,19 +22,9 @@ export default function App() {
   }, []);
 
   return (
-    <Suspense
-      fallback={
-        <View>
-          <Text>Loading...</Text>
-        </View>
-      }
-    >
-      <View className="items-center bg-light h-full">
-        <Clock />
-        <Alarms />
-        <NewAlarmBtn />
-        <StatusBar style="auto" />
-      </View>
-    </Suspense>
+    <>
+      {status === "none" ? <HomeScreen /> : <WakeUpScreen />}
+      <StatusBar style="auto" />
+    </>
   );
 }

@@ -1,91 +1,13 @@
 import {
-  Canvas,
   Circle,
   Group,
   Path,
   rect,
-  Rect,
   Shadow,
   Skia,
 } from "@shopify/react-native-skia";
 import { useEffect, useState } from "react";
-import { LayoutChangeEvent } from "react-native";
 import { useDerivedValue } from "react-native-reanimated";
-
-type Props = {};
-export const Clock = ({}: Props) => {
-  const [canvasDimensions, setCanvasDimensions] = useState({
-    width: 0,
-    height: 0,
-  });
-
-  const handleLayout = (event: LayoutChangeEvent) => {
-    const { width, height } = event.nativeEvent.layout;
-    setCanvasDimensions({ width, height });
-  };
-
-  const { width, height } = canvasDimensions;
-  const x = width / 2;
-  const y = height / 2;
-
-  return (
-    <Canvas
-      style={{ height: 203, width: "100%", paddingVertical: 150 }}
-      onLayout={handleLayout}
-    >
-      <ClockFrame x={x} y={y}>
-        <Markings x={x} y={y} />
-        <Hands x={x} y={y} />
-      </ClockFrame>
-    </Canvas>
-  );
-};
-
-type ClockFrameProps = {
-  children?: React.ReactNode;
-  x: number;
-  y: number;
-};
-const ClockFrame = ({ children, x, y }: ClockFrameProps) => {
-  const borderR = 101;
-  const containerR = 88;
-
-  return (
-    <>
-      <Group>
-        <Shadow dx={-1} dy={-1} blur={1} color="#FFFFFF" />
-        <Shadow dx={12} dy={12} blur={8} color="#A6B4C8" />
-        <Circle cx={x} cy={y} r={borderR} color="#EEF0F5" />
-      </Group>
-      <Group>
-        <Shadow dx={12} dy={12} blur={8} color="#A6B4C8" inner />
-        <Shadow dx={-1} dy={-1} blur={1} color="#FFFFFF" inner />
-        <Circle cx={x} cy={y} r={containerR} color="#EEF0F5" />
-      </Group>
-      {children}
-    </>
-  );
-};
-
-type MarkingsProps = {
-  x: number;
-  y: number;
-};
-const Markings = ({ x, y }: MarkingsProps) => {
-  const northMark = rect(x - 1, y - 72.5, 2, 8);
-  const southMark = rect(x - 1, y + 64.5, 2, 8);
-  const westMark = rect(x - 72.5, y - 1, 8, 2);
-  const eastMark = rect(x + 64.5, y - 1, 8, 2);
-
-  return (
-    <Group>
-      <Rect rect={northMark} color="#A6B4C8" opacity={0.57} />
-      <Rect rect={southMark} color="#A6B4C8" opacity={0.57} />
-      <Rect rect={westMark} color="#A6B4C8" opacity={0.57} />
-      <Rect rect={eastMark} color="#A6B4C8" opacity={0.57} />
-    </Group>
-  );
-};
 
 const Hands = ({ x, y }: { x: number; y: number }) => {
   const hourPath = Skia.Path.Make();
@@ -175,3 +97,5 @@ const Hands = ({ x, y }: { x: number; y: number }) => {
     </Group>
   );
 };
+
+export default Hands;

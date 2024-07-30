@@ -4,3 +4,5 @@ export type Alarm = {
   minute: number;
   active: boolean;
 };
+
+export type Status = "none" | "ringing";
